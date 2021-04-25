@@ -23,3 +23,13 @@ module "gitranker" {
   aws_region = "eu-west-3"
   cidr_block = "10.10.10.0/24"
 }
+
+module "frontend" {
+  source = "./modules/frontend"
+
+  providers = {
+    aws              = aws
+  }
+
+  frontend_subdomain = "gitranker"
+}
