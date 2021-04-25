@@ -1,3 +1,35 @@
+# Local files
+.DS_Store
+
+# Ignore VS code files
+/.vscode/
+*/.vscode/
+*.vscode/
+
+*log
+
+# Ignore bundler config.
+/.bundle
+
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/db/*.sqlite3-*
+
+# Ignore all logfiles and tempfiles.
+/log/*
+*/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore uploaded files in development.
+/storage/*
+!/storage/.keep
+.byebug_history
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+
 # Local .terraform directories
 **/.terraform/*
 

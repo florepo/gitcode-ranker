@@ -12,11 +12,11 @@ provider "aws" {
   region  = "eu-west-3"
 }
 
-module "gitranker" {
-  source = "./modules/gitranker"
+module "api" {
+  source = "./modules/backend"
 
   providers = {
-    aws  = aws
+    aws = aws
   }
 
   app_name = "gitranker"
@@ -28,7 +28,7 @@ module "frontend" {
   source = "./modules/frontend"
 
   providers = {
-    aws              = aws
+    aws = aws
   }
 
   frontend_subdomain = "gitranker"
