@@ -51,3 +51,35 @@ resource "aws_security_group" "ingress_api" {
     }
   )
 }
+
+# ALB Security Group (Traffic Internet -> ALB)
+resource "aws_security_group" "alb" {
+  name        = "alb_sg"
+  description = "controls access to the Application Load Balancer (ALB)"
+  vpc_id      = aws_vpc.default.id
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(local.default_tags,
+    {
+      Name      = "ALB Security Group"
+    }
+  )
+}

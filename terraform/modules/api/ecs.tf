@@ -1,11 +1,7 @@
-resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "ecs-cluster-${var.app_name}"
-}
-
-resource "aws_ecs_service" "ecs_service" {
-  name            = "ecs-service-${var.app_name}"                                     
-  cluster         = "${aws_ecs_cluster.ecs_cluster.id}"            # Referencing our cluster
-  task_definition = "${aws_ecs_task_definition.ecs_task_definition.arn}"   # Referencing the task our service will spin up
+resource "aws_ecs_service" "todo_api_service" {
+  name            = "todo_api_service"                                       
+  cluster         = "${aws_ecs_cluster.todo_api_cluster.id}"            # Referencing our cluster
+  task_definition = "${aws_ecs_task_definition.todo_api_task_definition.arn}"   # Referencing the task our service will spin up
   launch_type     = "FARGATE"
   desired_count   = 1 # Setting the number of containers we want deployed
 
@@ -19,7 +15,7 @@ resource "aws_ecs_service" "ecs_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.api-backend.arn
+    target_group_arn = aws_lb_target_group.production.arn
     container_name   = "service"
     container_port   = 3000
   }
@@ -28,13 +24,17 @@ resource "aws_ecs_service" "ecs_service" {
 
   tags = merge(local.default_tags,
     {
-      Name      = "ecs-service-${var.app_name}" 
+      Name      = "ECS Service"
     }
   )
 }
 
-resource "aws_ecs_task_definition" "ecs_task_definition" {
-  family                   = "ecs_task_definition"
+resource "aws_ecs_cluster" "todo_api_cluster" {
+  name = "todo_api_cluster"
+}
+
+resource "aws_ecs_task_definition" "todo_api_task_definition" {
+  family                   = "todo_api_task_definition"
   container_definitions    = <<DEFINITION
   [
     {
@@ -113,6 +113,6 @@ resource "aws_iam_role_policy" "ecr-access" {
 EOF
 }
 
-resource "aws_cloudwatch_log_group" "cloudwatch-log-group" {
-  name = "log-group-${var.app_name}"
+resource "aws_cloudwatch_log_group" "dummyapi" {
+  name = "awslogs-todoapi"
 }

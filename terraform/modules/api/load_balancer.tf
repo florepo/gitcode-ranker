@@ -1,5 +1,4 @@
-
-resource "aws_lb" "alb" {
+resource "aws_lb" "production" {
   name               = "alb"
   load_balancer_type = "application"
   subnets            = [
@@ -7,31 +6,31 @@ resource "aws_lb" "alb" {
     aws_subnet.public-alb-b.id
   ]
   security_groups   = [
-    aws_security_group.egress_all.id,
     aws_security_group.ingress_http.id,
     aws_security_group.ingress_api.id,
+    aws_security_group.egress_all.id,
   ]
 
   tags = merge(local.default_tags,
     {
-      Name      = "alb-${var.app_name}"
+      Name      = "ALB"
     }
   )
 }
 
 resource "aws_lb_listener" "http_forward" {
-  load_balancer_arn = aws_lb.alb.id
+  load_balancer_arn = aws_lb.production.id
   port              = 80
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.api-backend.id
+    target_group_arn = aws_lb_target_group.production.id
   }
 }
 
-resource "aws_lb_target_group" "api-backend" {
-  name        = "alb-${var.app_name}"
+resource "aws_lb_target_group" "production" {
+  name        = "todos-api-alb-tg"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = aws_vpc.default.id
@@ -46,11 +45,11 @@ resource "aws_lb_target_group" "api-backend" {
     path                = "/"
     unhealthy_threshold = "2"
   }
-  depends_on = [aws_lb.alb]
+  depends_on = [aws_lb.production]
 
   tags = merge(local.default_tags,
     {
-      Name      = "alb-${var.app_name}"
+      Name      = "ALB Target Group"
     }
   )
 }

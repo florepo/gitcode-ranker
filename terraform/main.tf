@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 module "api" {
-  source = "./modules/backend"
+  source = "./modules/api"
 
   providers = {
     aws = aws
