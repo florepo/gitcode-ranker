@@ -26,11 +26,11 @@ resource "aws_lb_listener" "http_forward" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.alb.id
+    target_group_arn = aws_lb_target_group.api-backend.id
   }
 }
 
-resource "aws_lb_target_group" "alb" {
+resource "aws_lb_target_group" "api-backend" {
   name        = "alb-${var.app_name}"
   port        = 3000
   protocol    = "HTTP"
