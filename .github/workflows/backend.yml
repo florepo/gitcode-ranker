@@ -1,0 +1,75 @@
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches: [ main ]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Retrieve AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and tag Docker image
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/ecr-gitranker:latest ./backend
+          docker push $ECR_REGISTRY/ecr-gitranker:latest
+          echo "::set-output name=image::$ECR_REGISTRY/ecr-gitranker:latest"
+
+      - name: Confirm correct built of Docker Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker image inspect $ECR_REGISTRY/ecr-gitranker:latest
+
+      - name: Push Docker image to AWS ECR
+        id: push-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker push $ECR_REGISTRY/ecr-gitranker:latest
+
+      - name: Download ECS Task Definition from AWS
+        id: download-task-definition
+        run: |
+          aws ecs describe-task-definition --task-definition ecs_task_definition --query taskDefinition > task-definition.json
+
+      - name: Update and render ECS Task Definition
+        id: update-and-render-container-definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        with:
+          container-name: service
+          task-definition: task-definition.json
+          image: 649471005469.dkr.ecr.eu-west-3.amazonaws.com/ecr-gitranker
+          # image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Task Definition to Amazon ECS service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          service: ecs-service-gitranker
+          cluster: ecs-cluster-gitranker
+          task-definition: ${{ steps.update-and-render-container-definition.outputs.task-definition }}
+          wait-for-service-stability: true
