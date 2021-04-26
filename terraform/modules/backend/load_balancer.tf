@@ -3,8 +3,8 @@ resource "aws_lb" "alb" {
   name               = "alb"
   load_balancer_type = "application"
   subnets            = [
-    aws_subnet.public-alb-a.id,
-    aws_subnet.public-alb-b.id
+    aws_subnet.public_alb_a.id,
+    aws_subnet.public_alb_b.id
   ]
   security_groups   = [
     aws_security_group.egress_all.id,
@@ -14,7 +14,7 @@ resource "aws_lb" "alb" {
 
   tags = merge(local.default_tags,
     {
-      Name      = "alb-${var.app_name}"
+      Name = "alb-${var.app_name}"
     }
   )
 }
@@ -26,11 +26,11 @@ resource "aws_lb_listener" "http_forward" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.api-backend.id
+    target_group_arn = aws_lb_target_group.alb_target_group.id
   }
 }
 
-resource "aws_lb_target_group" "api-backend" {
+resource "aws_lb_target_group" "alb_target_group" {
   name        = "alb-${var.app_name}"
   port        = 3000
   protocol    = "HTTP"

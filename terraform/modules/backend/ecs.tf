@@ -1,7 +1,3 @@
-resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "ecs-cluster-${var.app_name}"
-}
-
 resource "aws_ecs_service" "ecs_service" {
   name            = "ecs-service-${var.app_name}"                                     
   cluster         = "${aws_ecs_cluster.ecs_cluster.id}"            # Referencing our cluster
@@ -10,7 +6,7 @@ resource "aws_ecs_service" "ecs_service" {
   desired_count   = 1 # Setting the number of containers we want deployed
 
   network_configuration {
-    subnets          = [aws_subnet.ecs_subnet_a.id, aws_subnet.ecs_subnet_b.id]
+    subnets          = [aws_subnet.public_ecs_a.id, aws_subnet.public_ecs_b.id]
     assign_public_ip = true # Providing our containers with public IPs
     security_groups   = [
       aws_security_group.ingress_api.id,
@@ -19,23 +15,30 @@ resource "aws_ecs_service" "ecs_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.api-backend.arn
+    target_group_arn = aws_lb_target_group.alb_target_group.arn
     container_name   = "service"
     container_port   = 3000
   }
 
-  depends_on = [aws_lb_listener.http_forward, aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
+  depends_on = [
+    aws_lb_listener.http_forward,
+    aws_iam_role_policy_attachment.ecs_task_execution_role_policy
+  ]
 
   tags = merge(local.default_tags,
     {
-      Name      = "ecs-service-${var.app_name}" 
+      Name = "ecs-service-${var.app_name}" 
     }
   )
 }
 
+resource "aws_ecs_cluster" "ecs_cluster" {
+  name = "ecs-cluster-${var.app_name}"
+}
+
 resource "aws_ecs_task_definition" "ecs_task_definition" {
-  family                   = "ecs_task_definition"
-  container_definitions    = <<DEFINITION
+  family                = "ecs_task_definition"
+  container_definitions = <<DEFINITION
   [
     {
       "name": "service",
@@ -50,7 +53,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "awslogs-todoapi",
+          "awslogs-group": "awslogs-gitranker",
           "awslogs-region": "eu-west-3",
           "awslogs-stream-prefix": "ecs"
         }

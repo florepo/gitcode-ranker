@@ -55,7 +55,7 @@ locals {
 }
 
 # ALB subnets
-resource "aws_subnet" "public-alb-a" {
+resource "aws_subnet" "public_alb_a" {
   vpc_id                  = aws_vpc.default.id
   cidr_block              = local.public_alb_zone_a_cidr
   availability_zone       = "${var.aws_region}a"
@@ -69,7 +69,7 @@ resource "aws_subnet" "public-alb-a" {
   )
 }
 
-resource "aws_subnet" "public-alb-b" {
+resource "aws_subnet" "public_alb_b" {
   vpc_id                  = aws_vpc.default.id
   cidr_block              = local.public_alb_zone_b_cidr
   availability_zone       = "${var.aws_region}b"
@@ -83,18 +83,18 @@ resource "aws_subnet" "public-alb-b" {
   )
 }
 
-resource "aws_route_table_association" "public-alb-a" {
+resource "aws_route_table_association" "public_alb_a" {
   route_table_id    = aws_route_table.default.id
-  subnet_id         = aws_subnet.public-alb-a.id
+  subnet_id         = aws_subnet.public_alb_a.id
 }
 
-resource "aws_route_table_association" "public-alb-b" {
+resource "aws_route_table_association" "public_alb_b" {
   route_table_id    = aws_route_table.default.id
-  subnet_id         = aws_subnet.public-alb-b.id
+  subnet_id         = aws_subnet.public_alb_b.id
 }
 
 # ECS subnets
-resource "aws_subnet" "ecs_subnet_a" {
+resource "aws_subnet" "public_ecs_a" {
   vpc_id            = aws_vpc.default.id
   cidr_block        = local.ecs_zone_a_cidr
   availability_zone = "${var.aws_region}a"
@@ -107,7 +107,7 @@ resource "aws_subnet" "ecs_subnet_a" {
   )
 }
 
-resource "aws_subnet" "ecs_subnet_b" {
+resource "aws_subnet" "public_ecs_b" {
   vpc_id            = aws_vpc.default.id
   cidr_block        = local.ecs_zone_b_cidr
   availability_zone = "${var.aws_region}b"
@@ -117,4 +117,14 @@ resource "aws_subnet" "ecs_subnet_b" {
       Name = "${var.app_name}-ecs-${var.aws_region}b"
     }
   )
+}
+
+resource "aws_route_table_association" "public-ecs-a" {
+  route_table_id    = aws_route_table.default.id
+  subnet_id         = aws_subnet.public_ecs_a.id
+}
+
+resource "aws_route_table_association" "public-ecs-b" {
+  route_table_id    = aws_route_table.default.id
+  subnet_id         = aws_subnet.public_ecs_b.id
 }
