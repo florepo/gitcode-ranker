@@ -1,15 +1,15 @@
-resource "aws_ecr_repository" "ecr_repo" {
-  name = "ecr-${var.app_name}"
+resource "aws_ecr_repository" "todoapi_ecr_repo" {
+  name = "todoapi_ecr_repo"
 
   tags = merge(local.default_tags,
     {
-      Name = "ecr-${var.app_name}"
+      Name      = "ECR Repo"
     }
   )
 }
 
-resource "aws_ecr_lifecycle_policy" "ecr_repo_policy" {
-  repository = aws_ecr_repository.ecr_repo.name
+resource "aws_ecr_lifecycle_policy" "todoapi_ecr_repo_policy" {
+  repository = aws_ecr_repository.todoapi_ecr_repo.name
 
   policy = <<EOF
 {
