@@ -15,12 +15,12 @@ resource "aws_ecs_service" "todo_api_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.production.arn
+    target_group_arn = aws_lb_target_group.alb_backend.arn
     container_name   = "service"
     container_port   = 3000
   }
 
-  depends_on = [aws_lb_listener.http_forward, aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
+  depends_on = [aws_lb_listener.alb_http_forward, aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
 
   tags = merge(local.default_tags,
     {
