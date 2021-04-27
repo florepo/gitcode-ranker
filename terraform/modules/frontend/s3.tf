@@ -1,6 +1,6 @@
 # AWS main domain bucket (file storage)
 resource "aws_s3_bucket" "website" {
-  bucket = "${var.frontend_subdomain}"
+  bucket = var.web_bucket_name
   acl    = "public-read"
   policy = <<POLICY
 {
@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "website" {
       "Effect":"Allow",
       "Principal": "*",
       "Action":["s3:GetObject"],
-      "Resource":["arn:aws:s3:::${var.frontend_subdomain}/*"]
+      "Resource":["arn:aws:s3:::${var.web_bucket_name}/*"]
     }
   ]
 }

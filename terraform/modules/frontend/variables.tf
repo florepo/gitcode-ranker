@@ -1,3 +1,2 @@
 # website name without preceeding www
-variable "frontend_subdomain" {
-}
+variable "web_bucket_name" {}
