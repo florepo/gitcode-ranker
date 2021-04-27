@@ -15,7 +15,7 @@ resource "aws_ecs_service" "todo_api_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.alb_backend.arn
+    target_group_arn = aws_lb_target_group.alb_ecs_backend.arn
     container_name   = "service"
     container_port   = 3000
   }

@@ -39,9 +39,11 @@ module "api" {
     aws = aws
   }
 
-  app_name   = "gitranker"
-  aws_region = "eu-west-3"
-  cidr_block = "10.10.10.0/24"
+  root_domain_name  = data.aws_route53_zone.selected.name
+  api_subdomain     = "api"
+  app_name          = "gitranker"
+  aws_region        = "eu-west-3"
+  cidr_block        = "10.10.10.0/24"
 }
 
 
@@ -55,7 +57,6 @@ module "cdn" {
 
   root_domain_name    = data.aws_route53_zone.selected.name
   frontend_subdomain  = "reporanker"
-  api_subdomain       = "api"
   web_bucket_id       = module.frontend.web_bucket_id
   website_endpoint    = module.frontend.web_bucket_website_endpoint
 }
