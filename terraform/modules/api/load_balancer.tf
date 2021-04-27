@@ -1,4 +1,4 @@
-resource "aws_lb" "alb" {
+resource "aws_lb" "ecs" {
   name               = "alb"
   load_balancer_type = "application"
   subnets            = [
@@ -13,26 +13,24 @@ resource "aws_lb" "alb" {
 
   tags = merge(local.default_tags,
     {
-      Name = "ALB"
+      Name = "alb-ecs"
     }
   )
 }
 
 resource "aws_lb_listener" "alb_http_forward" {
-  load_balancer_arn = aws_lb.alb.id
+  load_balancer_arn = aws_lb.ecs.id
   port              = 80
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.alb_backend.id
+    target_group_arn = aws_lb_target_group.alb_ecs_backend.id
   }
 }
 
-
-
-resource "aws_lb_target_group" "alb_backend" {
-  name        = "alb-tg"
+resource "aws_lb_target_group" "alb_ecs_backend" {
+  name        = "alb-ecs-tg"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = aws_vpc.default.id
@@ -47,7 +45,7 @@ resource "aws_lb_target_group" "alb_backend" {
     path                = "/"
     unhealthy_threshold = "2"
   }
-  depends_on = [aws_lb.alb]
+  depends_on = [aws_lb.ecs]
 
   tags = merge(local.default_tags,
     {

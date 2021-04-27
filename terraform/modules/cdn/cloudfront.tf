@@ -31,6 +31,13 @@ resource "aws_cloudfront_distribution" "website" {
 
     forwarded_values {
       query_string = false
+
+      headers = [
+        "Origin",
+        "Access-Control-Request-Headers",
+        "Access-Control-Request-Method",
+      ]
+
       cookies {
         forward = "none"
       }
@@ -55,5 +62,6 @@ resource "aws_cloudfront_distribution" "website" {
     response_page_path    = "/404.html"
     response_code         = 404
   }
+
   depends_on = [aws_acm_certificate.website_domain]
 }
