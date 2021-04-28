@@ -23,7 +23,8 @@ module ChargyBackend
   class Application < Rails::Application
 
     # Allow AWS hosts
-    config.hosts << [".amazonaws.com", "api.cloudgate.link"]
+    config.hosts << ".amazonaws.com"     # whitelist aws resource
+    config.hosts << "api.cloudgate.link" # whitelist domain
 
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
