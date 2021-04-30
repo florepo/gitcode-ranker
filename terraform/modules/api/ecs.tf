@@ -20,7 +20,7 @@ resource "aws_ecs_service" "todo_api_service" {
     container_port   = 3000
   }
 
-  depends_on = [aws_lb_listener.alb_http_forward, aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
+  depends_on = [aws_lb_listener.alb-http-https-redirect, aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
 
   tags = merge(local.default_tags,
     {
