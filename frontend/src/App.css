@@ -1,18 +1,3 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -24,15 +9,45 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.App {
+  text-align: center;
+  height: 100vh;
+  background-color: rgb(51, 134, 175);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.form-input {
+  display: inline;
+}
+
+.search-form{
+  padding: 10px;
+}
+
+.header {
+  background-color: #2797CE;
+  color: white;
+  border: 1px solid grey;
+  padding: 20px;
+  height: 10vh;
+}
+
+.searchbar {
+  background-color: rgb(102, 192, 236);
+  color: white;
+}
+
+.language-list{
+  background-color: rgb(51, 134, 175);
+  font-size: calc(14px);
+}
+
+.main {
+  background-color: rgb(51, 134, 175);
+  color: white;
+}
+
+.favourites {
+  background-color: rgb(51, 134, 175);
+  color: white;
+  border: 1px solid grey;
 }
