@@ -10,14 +10,24 @@ data "aws_route53_zone" "root_domain" {
 
 # ACM public Certificate, validate via DNS
 resource "aws_acm_certificate" "api" {
-  provider          = aws.acm_certificates_provider
-
-  domain_name               = "${var.api_subdomain}.${var.root_domain_name}"
-  validation_method         = "DNS"
+  domain_name        = "${var.api_subdomain}.${var.root_domain_name}"
+  validation_method  = "DNS"
 
   lifecycle {
     create_before_destroy = true
   }
+
+  tags = merge(local.default_tags,
+    {
+      Name = "api-alb-certificate"
+    }
+  )
+}
+
+resource "aws_acm_certificate_validation" "api_cert_validation" {
+  provider                = aws
+  certificate_arn         = aws_acm_certificate.api.arn
+  validation_record_fqdns = [for record in aws_route53_record.api_cert_validation : record.fqdn]
 }
 
 # Setup record for DNS validation of wildcard certificate
@@ -36,11 +46,4 @@ resource "aws_route53_record" "api_cert_validation" {
   ttl             = 60
   type            = each.value.type
   zone_id         = data.aws_route53_zone.root_domain.zone_id
-}
-
-resource "aws_acm_certificate_validation" "api_cert_validation" {
-  provider                = aws.acm_certificates_provider
-
-  certificate_arn         = aws_acm_certificate.api.arn
-  validation_record_fqdns = [for record in aws_route53_record.api_cert_validation : record.fqdn]
 }

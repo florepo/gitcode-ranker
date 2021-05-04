@@ -54,13 +54,17 @@ resource "aws_alb_listener" "alb-https-listener" {
   depends_on = [aws_lb_target_group.alb_ecs_backend, aws_lb.ecs]
 }
 
+resource "aws_lb_listener_certificate" "alb-https-listener" {
+  listener_arn    = aws_alb_listener.alb-https-listener.arn
+  certificate_arn = aws_acm_certificate.api.arn
+}
+
 resource "aws_lb_target_group" "alb_ecs_backend" {
   name        = "alb-ecs-tg"
   port        = 3000
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.default.id
-  
 
   health_check {
     healthy_threshold   = "3"
