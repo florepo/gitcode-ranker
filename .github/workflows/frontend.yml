@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
       - uses: actions/checkout@v2
 
       - name: Configure AWS Credentials
@@ -21,11 +20,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Install Packages
-        run: npm install
-        working-directory: ./frontend
-
-      - name: Build production build
-        run: npm run build
+        run: npm install && npm run build
         working-directory: ./frontend
 
       - name: Deploy app build to S3 bucket
