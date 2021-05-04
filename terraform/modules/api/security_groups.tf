@@ -16,6 +16,24 @@ resource "aws_security_group" "ingress_http" {
   )
 }
 
+resource "aws_security_group" "ingress_https" {
+  name        = "ingress_https"
+  description = "HTTP traffic"
+  vpc_id      = aws_vpc.default.id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = merge(local.default_tags,
+    {
+      Name      = "Ingress TCP 80"
+    }
+  )
+}
+
 resource "aws_security_group" "egress_all" {
   name        = "egress_all"
   description = "Allow all outbound traffic"
