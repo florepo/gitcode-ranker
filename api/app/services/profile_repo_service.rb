@@ -36,7 +36,7 @@ class ProfileRepoService
     repo_languages_array = extract_languages_from_repos(repos_array)
 
     repo_languages_array.each do |language|
-      !language_count[language] ? counter[language] = 1 : counter[language] += 1
+      !counter[language] ? counter[language] = 1 : counter[language] += 1
     end
 
     counter
