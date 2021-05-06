@@ -3,27 +3,33 @@ import React from 'react';
 import Favourites from '../components/Favourites'
 import Languages from '../components/Languages'
 
-const DisplayContainer = () => {
-  let mostUsedLanguage = this.props.data["most_used_language"]
-  let noRepositoriesFoundMessage = "No repositories published"
+const DisplayContainer = (props) => {
+  const languages = props.data["languages"]
 
-  const renderResults = () => {
-    if (mostUsedLanguage){
+  const isEmpty = (obj) => {return JSON.stringify(obj) === '{}' }
+
+  const selectedProfile = (profileName) => <p>Selected GitHub Profile: <b>{profileName}</b></p>
+  const totalNumberOfRepositories = (numberOfRepos) => <p>Repositories found: <b>{numberOfRepos}</b></p>
+
+  let renderElements
+
+  if (!isEmpty(languages)){
+    renderElements =
       <React.Fragment>
-        <p>Selected GitHub Profile: <b>{this.props.profile_name}</b></p>
-        <Favourites data={this.props.data}/>
-        <Languages data={this.props.data}/>
+        {totalNumberOfRepositories(props.data["total_repos"])}
+        <Favourites data={props.data}/>
+        <Languages data={props.data}/>
       </React.Fragment>
-    } else {
-      noRepositoriesFoundMessage()
-    }
+  } else {
+    renderElements = <p>No public repositories found</p>
   }
 
   return (
     <React.Fragment>
-      {renderResults()}
+      {selectedProfile(props.profileName)}
+      {renderElements}
     </React.Fragment>
-  );
+  )
 }
 
 export default DisplayContainer;

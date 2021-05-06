@@ -1,70 +1,57 @@
-
 import React, {Component} from 'react';
+
+import {API} from '../adapters/Api';
 
 import SearchBar from '../components/SearchBar';
 import DisplayContainer from './DisplayContainer';
-
-import {API} from '../adapters/Api';
-import BACKEND_PROFILES_URL from '../adapters/Endpoints';
 
 class MainContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loadingState: "ready",
-      status: "ok",
-      data: null,
-      searchInput: null
+      isFetching: false,
+      profileName: null,
+      profileData: null,
     };
   }
 
-  componentDidUpdate(prevProps, prevState){
-    if (prevState.searchInput !== this.state.searchInput) {
-      this.getProfileInfo();
-    }
+  getProfileInfo = (profileName) => {
+    this.setState({...this.state, isFetching: true, profileName: profileName});
+    
+    API.get(profileName)
+      .then(result => {
+        console.log(result)
+        this.setState({...this.state, isFetching: false, profileData: result["data"]});
+      }).catch(error => {
+        console.log(error);
+        this.setState({...this.state, isFetching: false, profileName: null});
+      })
   }
 
-  getProfileInfo = (profile_name) => {
-    if (profile_name) {
-      let url = BACKEND_PROFILES_URL + "/" + profile_name
-      return API.get(url)
-        .then(json => this.setState(
-          {
-            status: json["status"],
-            data: json["data"],
-            loadingState: "ready"
-          }
-        ))
-    }
-  }
-
-  handleSearchSubmit = (profile_name_input) => {
-    this.setState({ loadingState: "loading", searchInput: profile_name_input })
-    setTimeout(this.getProfileInfo, 400, profile_name_input);
+  handleSearchSubmit = (input) => {
+    this.getProfileInfo(input);
+    this.setState({...this.state, profileName: input});
   }
   
   render() { 
-    let hasOkStatus = Boolean(this.state.status==="ok")
+    let renderElements;
 
-    let userMessage = (status) => status ? "Enter GitHub Profile name you wish to analyse" : this.state.status
+    if(!!this.state.profileData){
+      renderElements =
+        <DisplayContainer
+          data={this.state.profileData}
+          profileName={this.state.profileName}
+          status={this.state.isFetching}
+        />
+    } else if(this.state.isFetching===true) {
+      renderElements = <p>Analyzing...</p>
+    }
 
     return (
-      <React.Fragment>
-        <div className = "main">
-          <SearchBar handleSubmit={this.handleSearchSubmit}/>
-          {
-            (hasOkStatus && !!this.state.searchInput)
-            ? 
-            <DisplayContainer
-              data={this.state.data}
-              status={this.state.status}
-              profile_name={this.state.searchInput}
-            />
-            :
-            userMessage(hasOkStatus)
-          }
-        </div>
-      </React.Fragment>
+      <div className = "main">
+        <SearchBar handleSubmit={this.handleSearchSubmit}/>
+        {renderElements}
+      </div>
     )
   }
 }

@@ -9,21 +9,21 @@ class SearchBar extends Component {
     this.state = { input: null }
   }
 
-  handleChange = (event) => {
-    this.setState({ input: event.target.value });
+  handleChange = (ev) => {
+    this.setState({ input: ev.target.value });
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
+  handleSubmit = (ev) => {
+    ev.preventDefault();
+    console.log(this.state.input)
     this.props.handleSubmit(this.state.input)
   }
 
   render() { 
     return ( 
-      <div className="searchbar">
-        <form className="search-form"
-          onSubmit={this.handleSubmit}
-        >
+      <div className="searchbar-container">
+        <div className="search-prompt">Enter the GitHub profile name you wish to analyse</div>
+        <form className="search-form" onSubmit={this.handleSubmit}>
           <Input className="form-input"
             placeholder="GitHub Profile Name"
             onChange={this.handleChange}
