@@ -1,25 +1,12 @@
 import React from 'react';
 
-const Favourites = () => {
-  let favouriteLanguages = this.props.data["most_used_language"]
-  let timesFavouriteLanguageIsUsed = this.props.data.languages[[...favouriteLanguages.shift()]]
-
-  const languages = favouriteLanguages.length===1 ? "language is" : "languages are"
-  const repositories = timesFavouriteLanguageIsUsed===1 ? "repository" : "repositories"
+const Favourites = (props) => {
+  const favouriteLanguages = props.data["most_used_language"]
+  const pluralizeLanguage = favouriteLanguages.length===1 ? "language is" : "languages are"
 
   return (
     <div className="favourites">
-      <p> The most commonly used {languages} </p>
-      {
-        favouriteLanguages.map(language =>
-          <div key={language}>
-            <p><b>{language}</b></p>
-          </div>
-        )
-      }
-      <p>
-        used in <b>{timesFavouriteLanguageIsUsed}</b> {repositories}
-      </p>
+      <p> The most commonly used {pluralizeLanguage}: <b>{favouriteLanguages.join(', ')}</b></p>
     </div>
   )
 }

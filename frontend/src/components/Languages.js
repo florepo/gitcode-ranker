@@ -1,26 +1,33 @@
 import React from 'react';
 
-const Languages = () => {
-  const languages = Object.keys(this.props.data["languages"]).filter(Boolean).sort()
+const Languages = (props) => {
+  const sortByValue= (hash) => Object.keys(hash).sort(function(a,b){return hash[a]-hash[b]}).reverse()
+  const rankedLanguages = sortByValue(props.data["languages"]).filter(Boolean)
 
-  let numberOfTimesUsed = (language) => this.props.data["languages"][language]
-  let pluralizeRepositoryFor = (language) => numberOfTimesUsed (language)===1 ? "repository" : "repositories"
+  let numberOfTimesUsed = (language) => props.data["languages"][language]
+  let pluralizeRepositoryFor = (language) => numberOfTimesUsed(language)===1 ? "repository" : "repositories"
+
+  let renderElements
+
+  if (rankedLanguages.length===0){
+    renderElements = null
+  } else {
+    renderElements =
+    <React.Fragment>
+      <p>Breakdown of repository's main languages:</p>
+      {rankedLanguages.map(language =>
+        <div key={language}>
+          <p className="language-list-item">
+            <b>{language}</b> in <b> {numberOfTimesUsed(language)}</b> {pluralizeRepositoryFor(language)}
+          </p>
+        </div>
+      )}
+    </React.Fragment>
+  }
 
   return (
-    <div className="favourites">     
-      {
-        languages
-        ?
-        languages.map(language =>
-          <div key={language}>
-            <p className="language-list">
-              <b>{language}</b> is used in <b> {numberOfTimesUsed(language)}</b> {pluralizeRepositoryFor(language)}
-            </p>
-          </div>
-        )
-        :
-        null
-      }
+    <div className="language-list">
+      {renderElements}
     </div>
   )
 }

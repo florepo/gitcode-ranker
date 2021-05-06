@@ -19,6 +19,10 @@
   display: inline;
 }
 
+.search-prompt {
+  padding: 10px;
+}
+
 .search-form{
   padding: 10px;
 }
@@ -31,23 +35,24 @@
   height: 10vh;
 }
 
-.searchbar {
+.searchbar-container {
   background-color: rgb(102, 192, 236);
   color: white;
 }
 
-.language-list{
-  background-color: rgb(51, 134, 175);
-  font-size: calc(14px);
-}
 
 .main {
   background-color: rgb(51, 134, 175);
   color: white;
 }
 
-.favourites {
+.language-list {
   background-color: rgb(51, 134, 175);
   color: white;
   border: 1px solid grey;
+}
+
+.language-list-item{
+  background-color: rgb(51, 134, 175);
+  font-size: calc(14px);
 }
