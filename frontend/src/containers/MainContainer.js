@@ -11,12 +11,12 @@ class MainContainer extends Component {
     this.state = {
       isFetching: false,
       profileName: null,
-      profileData: null,
+      profileData: {},
     };
   }
 
   getProfileInfo = (profileName) => {
-    this.setState({...this.state, isFetching: true, profileName: profileName});
+    this.setState({isFetching: true, profileName: profileName});
     
     API.get(profileName)
       .then(result => {
@@ -24,33 +24,21 @@ class MainContainer extends Component {
         this.setState({...this.state, isFetching: false, profileData: result["data"]});
       }).catch(error => {
         console.log(error);
-        this.setState({...this.state, isFetching: false, profileName: null});
+        this.setState({...this.state, isFetching: null, profileName: null});
       })
   }
 
-  handleSearchSubmit = (input) => {
-    this.getProfileInfo(input);
-    this.setState({...this.state, profileName: input});
-  }
+  handleSearchSubmit = (input) => { this.getProfileInfo(input) };
   
   render() { 
-    let renderElements;
-
-    if(!!this.state.profileData && this.state.isFetching===false){
-      renderElements =
-        <DisplayContainer
-          data={this.state.profileData}
-          profileName={this.state.profileName}
-          status={this.state.isFetching}
-        />
-    } else if(this.state.isFetching===true) {
-      renderElements = <p>Analyzing...</p>
-    }
-
     return (
       <div className = "main">
         <SearchBar handleSubmit={this.handleSearchSubmit}/>
-        {renderElements}
+        <DisplayContainer
+          data={this.state.profileData}
+          profileName={this.state.profileName}
+          isLoading={this.state.isFetching}
+        />
       </div>
     )
   }

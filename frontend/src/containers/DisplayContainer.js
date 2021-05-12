@@ -1,36 +1,27 @@
 import React from 'react';
 
-import Favourites from '../components/Favourites'
-import Languages from '../components/Languages'
+import Languages from '../components/Languages';
+import Spinner from '../components/Spinner';
 
 const DisplayContainer = (props) => {
-  const languages = props.data["languages"]
-  const mostUsedLanguages = props.data["most_used_language"]
 
-  const isEmpty = (obj) => {return JSON.stringify(obj) === '{}' }
+  if(props.isLoading){ return (<Spinner />) };
 
-  const selectedProfile = (profileName) => <p>Selected GitHub Profile: <b>{profileName}</b></p>
-  const totalNumberOfRepositories = (numberOfRepos) => <p>Repositories found: <b>{numberOfRepos}</b></p>
+  if(JSON.stringify(props.data)==='{}' || !props.data ) { return <p>Profile not found</p>; }
 
-  let renderElements
+  if(props.data && !props.data.total_repos) { <p>No public repositories found</p>;  }
 
-  if (!isEmpty(languages) && mostUsedLanguages.length!==0 ){
-    renderElements =
-      <React.Fragment>
-        {totalNumberOfRepositories(props.data["total_repos"])}
-        <Favourites data={props.data}/>
-        <Languages data={props.data}/>
-      </React.Fragment>
-  } else {
-    renderElements = <p>No public repositories found</p>
-  }
-
-  return (
+  const selectProfile = (profileName) => <p>Selected GitHub Profile: <b>{profileName}</b></p>;
+  const publicReposFound = (numberOfRepos) => <p>Public Repositories found: <b>{numberOfRepos}</b></p>;
+    
+  let renderElements =
     <React.Fragment>
-      {selectedProfile(props.profileName)}
-      {renderElements}
+      {selectProfile(props.profileName)}
+      {publicReposFound(props.data.total_repos)}
+      <Languages data={props.data}/>
     </React.Fragment>
-  )
-}
+
+  return renderElements
+};
 
 export default DisplayContainer;

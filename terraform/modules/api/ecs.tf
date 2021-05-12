@@ -116,3 +116,11 @@ EOF
 resource "aws_cloudwatch_log_group" "dummyapi" {
   name = "awslogs-todoapi"
 }
+
+resource "aws_appautoscaling_target" "ecs_target" {
+  max_capacity       = 1
+  min_capacity       = 1
+  resource_id        = "service/todo_api_cluster/todo_api_service"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
