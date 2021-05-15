@@ -113,8 +113,13 @@ resource "aws_iam_role_policy" "ecr-access" {
 EOF
 }
 
+<<<<<<< HEAD:terraform/modules/api/ecs.tf
 resource "aws_cloudwatch_log_group" "api" {
   name = "awslogs-gitcoderanker-api"
+=======
+resource "aws_cloudwatch_log_group" "dummyapi" {
+  name = "awslogs-todoapi"
+>>>>>>> 2458e5005a63b8a42cff0d8f86758f6030bd0f92:terraform/modules/backend/ecs.tf
 }
 
 resource "aws_appautoscaling_target" "ecs_target" {
