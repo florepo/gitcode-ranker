@@ -1,7 +1,7 @@
-resource "aws_ecs_service" "todo_api_service" {
-  name            = "todo_api_service"                                       
-  cluster         = "${aws_ecs_cluster.todo_api_cluster.id}"            # Referencing our cluster
-  task_definition = "${aws_ecs_task_definition.todo_api_task_definition.arn}"   # Referencing the task our service will spin up
+resource "aws_ecs_service" "api_service" {
+  name            = "api_service"
+  cluster         = "${aws_ecs_cluster.api_cluster.id}"            # Referencing our cluster
+  task_definition = "${aws_ecs_task_definition.api_task_definition.arn}"   # Referencing the task our service will spin up
   launch_type     = "FARGATE"
   desired_count   = 1 # Setting the number of containers we want deployed
 
@@ -24,18 +24,18 @@ resource "aws_ecs_service" "todo_api_service" {
 
   tags = merge(local.default_tags,
     {
-      Name      = "ECS Service"
+      Name = "ECS Service"
     }
   )
 }
 
-resource "aws_ecs_cluster" "todo_api_cluster" {
-  name = "todo_api_cluster"
+resource "aws_ecs_cluster" "api_cluster" {
+  name = "api_cluster"
 }
 
-resource "aws_ecs_task_definition" "todo_api_task_definition" {
-  family                   = "todo_api_task_definition"
-  container_definitions    = <<DEFINITION
+resource "aws_ecs_task_definition" "api_task_definition" {
+  family                = "api_task_definition"
+  container_definitions = <<DEFINITION
   [
     {
       "name": "service",
@@ -50,7 +50,7 @@ resource "aws_ecs_task_definition" "todo_api_task_definition" {
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "awslogs-todoapi",
+          "awslogs-group": "awslogs-gitcoderanker-api",
           "awslogs-region": "eu-west-3",
           "awslogs-stream-prefix": "ecs"
         }
@@ -113,14 +113,14 @@ resource "aws_iam_role_policy" "ecr-access" {
 EOF
 }
 
-resource "aws_cloudwatch_log_group" "dummyapi" {
-  name = "awslogs-todoapi"
+resource "aws_cloudwatch_log_group" "api" {
+  name = "awslogs-gitcoderanker-api"
 }
 
 resource "aws_appautoscaling_target" "ecs_target" {
   max_capacity       = 1
   min_capacity       = 1
-  resource_id        = "service/todo_api_cluster/todo_api_service"
+  resource_id        = "service/api_cluster/api_service"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
 }
