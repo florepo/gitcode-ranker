@@ -28,7 +28,9 @@ class MainContainer extends Component {
       })
   }
 
-  handleSearchSubmit = (input) => { this.getProfileInfo(input) };
+  handleSearchSubmit = (input) => {
+    if(input) { this.getProfileInfo(input) }
+  };
   
   render() { 
     return (

@@ -14,7 +14,7 @@ const Languages = (props) => {
   } else {
     renderElements =
     <React.Fragment>
-      <p>Breakdown of repository's main languages:</p>
+      <p>Breakdown of languages used repositories:</p>
       {rankedLanguages.map(language =>
         <div key={language}>
           <p className="language-list-item">

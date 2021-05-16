@@ -17,7 +17,7 @@ class ProfileRepoService
       response["data"] = payload
       response["status"] = "ok"
     else
-      response["status"]= "error: profile name does not exist"
+      response["error"]= "profile name does not exist"
     end
 
     response
