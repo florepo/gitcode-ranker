@@ -20,7 +20,6 @@ class MainContainer extends Component {
     
     API.get(profileName)
       .then(result => {
-        console.log(result)
         this.setState({...this.state, isFetching: false, profileData: result["data"]});
       }).catch(error => {
         console.log(error);
