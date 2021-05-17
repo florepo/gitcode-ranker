@@ -3,7 +3,7 @@ resource "aws_ecs_service" "api_service" {
   cluster         = "${aws_ecs_cluster.api_cluster.id}"            # Referencing our cluster
   task_definition = "${aws_ecs_task_definition.api_task_definition.arn}"   # Referencing the task our service will spin up
   launch_type     = "FARGATE"
-  desired_count   = 1 # Setting the number of containers we want deployed
+  desired_count   = 2 # Setting the number of containers we want deployed
 
   network_configuration {
     subnets          = [aws_subnet.ecs_subnet_a.id, aws_subnet.ecs_subnet_b.id]
@@ -113,13 +113,8 @@ resource "aws_iam_role_policy" "ecr-access" {
 EOF
 }
 
-<<<<<<< HEAD:terraform/modules/api/ecs.tf
 resource "aws_cloudwatch_log_group" "api" {
   name = "awslogs-gitcoderanker-api"
-=======
-resource "aws_cloudwatch_log_group" "dummyapi" {
-  name = "awslogs-todoapi"
->>>>>>> 2458e5005a63b8a42cff0d8f86758f6030bd0f92:terraform/modules/backend/ecs.tf
 }
 
 resource "aws_appautoscaling_target" "ecs_target" {
