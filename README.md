@@ -3,36 +3,41 @@
 <!-- ABOUT THE PROJECT -->
 ## About the Project
 
-Analyze your github profile's repositories to find out which languages you use in yout projects.
+Analyze your github profile's repositories to find out which languages you use in your projects.
 
-It also determines your most favourite language(s) based on the amount of repositoeries it is used.
+It provides a breakdown which languages are used in how many repos.
 
 
-[]
+![App Interface](frontend/assets/app.png?raw=true)
 
 <!-- USAGE EXAMPLES -->
 ## How to use
 
 Enter the profile name you want to analyze.
 
-The application will query the Github API and present the results for the submitted profile name
+The application will query the Github API and present the results for the submitted profile name.
+
+The project is currently hosted at [cloudgate.link](https://cloudgate.link).
 
 ## Key Features
 
 * Analyse what languages you use in your Github projects and how many projects are build with them.
 * Microservice architecture with a React.js frontend hosted on S3 and Rails API backend hosted on AWS Elastic Container Service.
 * API backend deployment with AWS Elastic Container Registry and Elastic Container Service an AWS Fargate.
-* All required infrastructure for the project are defined and can be provisioned with one command via Terraform.
+* All required infrastructure for the project is defined as Infrastruture as Code and can be provisioned with one command via Terraform.
 * CI pipeline allows deployments on push to 'main' branch using Github workflows.
 
 ### Built With
 
 * React.js
-* [Github API](https://getbootstrap.com/)
+* [Github Octokit](https://github.com/octokit)
 * Docker
 * [AWS - S3, Cloudfront, ACM, Route53, ELB, ECS, ECR](https://aws.amazon.com/)
 * Terraform
 * [Github Workflows CI](https://github.com/features/actions)
+
+
+![App Interface](frontend/assets/gitcode-ranker-tech-stack.png?raw=true)
 
 <!-- GETTING STARTED -->
 ## Getting Started
